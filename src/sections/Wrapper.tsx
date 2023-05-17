@@ -1,7 +1,7 @@
 import React from "react";
 
 const Wrapper: React.FC = () => {
-	return <div>Wrapper</div>;
+	return <section className="content">Wrapper</section>;
 };
 
 export default Wrapper;
