@@ -1,7 +1,13 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 
+import appReducer from "./app/slice";
+import pokemonReducer from "./pokemon/slice";
+
 export const store = configureStore({
-	reducer: {},
+	reducer: {
+		app: appReducer,
+		pokemon: pokemonReducer,
+	},
 });
 
 export type AppDispatch = typeof store.dispatch;
