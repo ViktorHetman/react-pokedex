@@ -1,7 +1,11 @@
 import React from "react";
 
-const Wrapper: React.FC = () => {
-	return <section className="content">Wrapper</section>;
+const Wrapper = (Component: React.FC) => () => {
+	return (
+		<section className="content">
+			<Component />
+		</section>
+	);
 };
 
 export default Wrapper;

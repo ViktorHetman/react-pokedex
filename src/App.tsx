@@ -9,7 +9,6 @@ import Compare from "./pages/Compare";
 import List from "./pages/List";
 
 import Navbar from "./sections/Navbar";
-import Wrapper from "./sections/Wrapper";
 import Footer from "./sections/Footer";
 import Pokemon from "./pages/Pokemon";
 
@@ -29,7 +28,6 @@ const App: React.FC = () => {
 					<Route path="/pokemon/:id" element={<Pokemon />} />
 					<Route path="*" element={<Navigate to="/pokemon/1" />} />
 				</Routes>
-				<Wrapper />
 				<Footer />
 			</div>
 		</div>
