@@ -30,7 +30,11 @@ const Search: React.FC = () => {
 	return (
 		<>
 			<div className="search">
-				<input type="text" name="" />
+				<input
+					type="text"
+					className="pokemon-search-bar"
+					placeholder="Search for pokemon"
+				/>
 				<PokemonCard pokemons={randomPokemons!} />
 			</div>
 		</>
