@@ -6,10 +6,13 @@ import {
 	getInitialPokemonData,
 	getRandomPokemonData,
 } from "../redux/pokemon/asyncActions";
+import PokemonCard from "../components/PokemonCard";
 
 const Search: React.FC = () => {
 	const dispatch = useAppDispatch();
-	const { allPokemons } = useAppSelector(({ pokemon }) => pokemon);
+	const { allPokemons, randomPokemons } = useAppSelector(
+		({ pokemon }) => pokemon,
+	);
 	React.useEffect(() => {
 		dispatch(getInitialPokemonData());
 	}, [dispatch]);
@@ -24,7 +27,14 @@ const Search: React.FC = () => {
 		}
 	}, [allPokemons, dispatch]);
 
-	return <div>Search</div>;
+	return (
+		<>
+			<div className="search">
+				<input type="text" name="" />
+				<PokemonCard pokemons={randomPokemons!} />
+			</div>
+		</>
+	);
 };
 
 export default Wrapper(Search);

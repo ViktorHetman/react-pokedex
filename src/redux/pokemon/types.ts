@@ -1,6 +1,6 @@
 export interface PokemonTypeInitialState {
 	allPokemons: undefined | PokemonType[];
-	randomPokemons: undefined | GeneratedPokemonsType[];
+	randomPokemons: undefined | GeneratedRandomPokemonsType[];
 	status: Status;
 	error: null | undefined | string;
 }
@@ -16,7 +16,7 @@ export type PokemonType = {
 	url: string;
 };
 
-export interface GeneratedPokemonsType {
+export interface GeneratedRandomPokemonsType {
 	name: string;
 	id: number;
 	image: string;

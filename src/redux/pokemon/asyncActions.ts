@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 import { allPokemonsRoute } from "../../utils/constants";
-import { GeneratedPokemonsType, PokemonType } from "./types";
+import { GeneratedRandomPokemonsType, PokemonType } from "./types";
 import { defaultImages, images } from "../../utils/getPokemonImages";
 import { pokemonTypes } from "../../utils/pokemonTypes";
 
@@ -22,14 +22,14 @@ export const getRandomPokemonData = createAsyncThunk(
 	"pokemon/randomPokemon",
 	async (pokemons: PokemonType[]) => {
 		try {
-			const pokemonsData: GeneratedPokemonsType[] = [];
+			const pokemonsData: GeneratedRandomPokemonsType[] = [];
 			for await (const pokemon of pokemons) {
 				const {
 					data,
 				}: {
 					data: {
 						id: number;
-						types: { type: GeneratedPokemonsType }[];
+						types: { type: GeneratedRandomPokemonsType }[];
 					};
 				} = await axios.get(pokemon.url);
 				const types = data.types.map(
