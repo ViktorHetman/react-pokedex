@@ -3,6 +3,7 @@ export interface PokemonTypeInitialState {
 	randomPokemons: undefined | GeneratedRandomPokemonsType[];
 	status: Status;
 	error: null | undefined | string;
+	compareQueue: GeneratedRandomPokemonsType[];
 }
 
 export enum Status {
