@@ -34,8 +34,8 @@ const App: React.FC = () => {
 			};
 			toasts.forEach((message: string) => {
 				toast(message, toastOptions);
+				dispatch(clearToasts());
 			});
-			dispatch(clearToasts());
 		}
 	}, [toasts, dispatch]);
 
