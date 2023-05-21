@@ -5,12 +5,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { UserPokemonType } from "../models/types";
 import { pokemonTypeInterface } from "../redux/pokemon/types";
+import { useAppDispatch } from "../redux/hooks";
+import { addToCompare } from "../redux/pokemon/slice";
+import { setToasts } from "../redux/app/slice";
 
 const PokemonCard: React.FC<{ pokemons: UserPokemonType[] }> = ({
 	pokemons,
 }) => {
 	const location = useLocation();
 	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
 	return (
 		<div className="pokemon-card-container">
 			<div className="pokemon-card-grid">
@@ -28,7 +32,16 @@ const PokemonCard: React.FC<{ pokemons: UserPokemonType[] }> = ({
 									)}
 								</div>
 								<div className="pokemon-card-compare">
-									<IoGitCompare />
+									<IoGitCompare
+										onClick={() => {
+											dispatch(addToCompare(pokemon));
+											dispatch(
+												setToasts(
+													`${pokemon.name} has been added to compare queue`,
+												),
+											);
+										}}
+									/>
 								</div>
 								<h3 className="pokemon-card-title">{pokemon.name}</h3>
 								<img

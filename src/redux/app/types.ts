@@ -1,1 +1,3 @@
-export interface AppTypeInitialState {}
+export interface AppTypeInitialState {
+	toasts: string[];
+}
