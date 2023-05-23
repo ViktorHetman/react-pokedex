@@ -1,8 +1,14 @@
-import React from "react";
 import { FaPlus } from "react-icons/fa";
 
-import { UserPokemonType } from "../models/types";
+import {
+	PokemonStatType,
+	PokemonStats,
+	UserPokemonType,
+} from "../models/types";
 import { pokemonTypeInterface } from "../redux/pokemon/types";
+import { pokemonTypes } from "../utils/pokemonTypes";
+import { useAppDispatch } from "../redux/hooks";
+import { removeFromCompare } from "../redux/pokemon/slice";
 
 const CompareContainer = ({
 	pokemon = undefined,
@@ -11,7 +17,98 @@ const CompareContainer = ({
 	pokemon?: UserPokemonType;
 	isEmpty?: boolean;
 }) => {
-	const getStats = () => {};
+	const dispatch = useAppDispatch();
+	const createStatsArray = (
+		types: pokemonTypeInterface[],
+		statType: PokemonStatType,
+	) => {
+		const statsArray: { name: string; image: string }[] = [];
+		const statsSet = new Set<string[]>();
+		types.forEach((type: pokemonTypeInterface) => {
+			const keys = Object.keys(type)[0];
+			type[keys][statType].forEach((stat: string) => {
+				// @ts-expect-error
+				if (!statsSet.has(stat)) {
+					// @ts-expect-error
+					statsArray.push({ name: stat, image: pokemonTypes[stat].image });
+					// @ts-expect-error
+					statsSet.add(stat);
+				}
+			});
+		});
+		return statsArray;
+	};
+
+	const getStats = () => {
+		return (
+			<>
+				<div className="pokemon-types">
+					<h4 className="pokemon-type-title">Strength</h4>
+					<div className="pokemon-type-icons">
+						{createStatsArray(pokemon?.types!, PokemonStats.STRENGTH).map(
+							(stat: { image: string }) => (
+								<div className="pokemon-type">
+									<img
+										className="pokemon-type-image"
+										src={stat.image}
+										alt="pokemon type"
+									/>
+								</div>
+							),
+						)}
+					</div>
+				</div>
+				<div className="pokemon-types">
+					<h4 className="pokemon-type-title">Resistance</h4>
+					<div className="pokemon-type-icons">
+						{createStatsArray(pokemon?.types!, PokemonStats.RESISTANCE).map(
+							(stat: { image: string }) => (
+								<div className="pokemon-type">
+									<img
+										className="pokemon-type-image"
+										src={stat.image}
+										alt="pokemon type"
+									/>
+								</div>
+							),
+						)}
+					</div>
+				</div>
+				<div className="pokemon-types">
+					<h4 className="pokemon-type-title">Vulnerable</h4>
+					<div className="pokemon-type-icons">
+						{createStatsArray(pokemon?.types!, PokemonStats.VULNERABLE).map(
+							(stat: { image: string }) => (
+								<div className="pokemon-type">
+									<img
+										className="pokemon-type-image"
+										src={stat.image}
+										alt="pokemon type"
+									/>
+								</div>
+							),
+						)}
+					</div>
+				</div>
+				<div className="pokemon-types">
+					<h4 className="pokemon-type-title">Weakness</h4>
+					<div className="pokemon-type-icons">
+						{createStatsArray(pokemon?.types!, PokemonStats.WEAKNESS).map(
+							(stat: { image: string }) => (
+								<div className="pokemon-type">
+									<img
+										className="pokemon-type-image"
+										src={stat.image}
+										alt="pokemon type"
+									/>
+								</div>
+							),
+						)}
+					</div>
+				</div>
+			</>
+		);
+	};
 
 	return (
 		<div className="compare-container">
@@ -48,13 +145,18 @@ const CompareContainer = ({
 									})}
 								</div>
 							</div>
-							{/* {getStats()} */}
+							{getStats()}
 						</div>
 					</div>
 					<div className="compare-action-buttons">
 						<button className="compare-btn">Add</button>
 						<button className="view-btn">View</button>
-						<button className="remove-btn">Remove</button>
+						<button
+							className="remove-btn"
+							onClick={() => dispatch(removeFromCompare({ id: pokemon.id }))}
+						>
+							Remove
+						</button>
 					</div>
 				</div>
 			)}
