@@ -1,4 +1,5 @@
 import { FaPlus } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 import {
 	PokemonStatType,
@@ -18,6 +19,7 @@ const CompareContainer = ({
 	isEmpty?: boolean;
 }) => {
 	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
 	const createStatsArray = (
 		types: pokemonTypeInterface[],
 		statType: PokemonStatType,
@@ -150,7 +152,12 @@ const CompareContainer = ({
 					</div>
 					<div className="compare-action-buttons">
 						<button className="compare-btn">Add</button>
-						<button className="view-btn">View</button>
+						<button
+							className="view-btn"
+							onClick={() => navigate(`/pokemon/${pokemon.id}`)}
+						>
+							View
+						</button>
 						<button
 							className="remove-btn"
 							onClick={() => dispatch(removeFromCompare({ id: pokemon.id }))}
