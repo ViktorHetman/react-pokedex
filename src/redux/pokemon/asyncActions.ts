@@ -2,9 +2,18 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 import { allPokemonsRoute } from "../../utils/constants";
-import { GeneratedRandomPokemonsType, PokemonType } from "./types";
+import {
+	GeneratedRandomPokemonsType,
+	PokemonType,
+	pokemonTypeInterface,
+} from "./types";
 import { defaultImages, images } from "../../utils/getPokemonImages";
 import { pokemonTypes } from "../../utils/pokemonTypes";
+import { PokemonStatsInterface, UserPokemonType } from "../../models/types";
+import { RootState } from "../store";
+import { setToasts } from "../app/slice";
+import { addDoc } from "firebase/firestore";
+import { pokemonListRef } from "../../utils/FirebaseConfig";
 
 export const getInitialPokemonData = createAsyncThunk<PokemonType[]>(
 	"pokemon/initialData",
@@ -55,6 +64,48 @@ export const getRandomPokemonData = createAsyncThunk(
 				}
 			}
 			return pokemonsData;
+		} catch (error) {
+			console.log(error);
+		}
+	},
+);
+
+export const appPokemonToList = createAsyncThunk(
+	"pokemon/addPokemon",
+	async (
+		pokemon: {
+			id: number;
+			name: string;
+			types: pokemonTypeInterface[] | string;
+			stats?: PokemonStatsInterface[];
+		},
+		{ getState, dispatch },
+	) => {
+		try {
+			const {
+				app: { userInfo },
+				pokemon: { userPokemons },
+			} = getState() as RootState;
+			if (!userInfo?.email) {
+				return dispatch(
+					setToasts("Please login in order to add pokemon to your collection."),
+				);
+			}
+			const index = userPokemons.findIndex((userPokemon: UserPokemonType) => {
+				return userPokemon.name === pokemon.name;
+			});
+			if (index === -1) {
+				let types: string[] = [];
+				types = pokemon.types as unknown as string[];
+				await addDoc(pokemonListRef, {
+					pokemon: { id: pokemon.id, name: pokemon.name, types },
+				});
+				return dispatch(setToasts(`${pokemon.name} was added to your collection`));
+			} else {
+				return dispatch(
+					setToasts(`${pokemon.name} already exsist in ur collection`),
+				);
+			}
 		} catch (error) {
 			console.log(error);
 		}

@@ -13,6 +13,7 @@ const initialState: PokemonTypeInitialState = {
 	status: Status.LOADING,
 	error: null,
 	compareQueue: [],
+	userPokemons: [],
 };
 
 const pokemonSlice = createSlice({
@@ -21,8 +22,7 @@ const pokemonSlice = createSlice({
 	reducers: {
 		addToCompare: (state, action) => {
 			const index = state.compareQueue.findIndex(
-				(pokemon: GeneratedRandomPokemonsType) =>
-					pokemon.id === action.payload.id,
+				(pokemon: GeneratedRandomPokemonsType) => pokemon.id === action.payload.id,
 			);
 			if (index === -1) {
 				if (state.compareQueue.length === 2) {
@@ -33,8 +33,7 @@ const pokemonSlice = createSlice({
 		},
 		removeFromCompare: (state, action) => {
 			const index = state.compareQueue.findIndex(
-				(pokemon: GeneratedRandomPokemonsType) =>
-					pokemon.id === action.payload.id,
+				(pokemon: GeneratedRandomPokemonsType) => pokemon.id === action.payload.id,
 			);
 			const queue = [...state.compareQueue];
 			queue.splice(index, 1);

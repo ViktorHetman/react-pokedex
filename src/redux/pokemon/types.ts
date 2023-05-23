@@ -1,9 +1,12 @@
+import { UserPokemonType } from "../../models/types";
+
 export interface PokemonTypeInitialState {
 	allPokemons: undefined | PokemonType[];
 	randomPokemons: undefined | GeneratedRandomPokemonsType[];
 	status: Status;
 	error: null | undefined | string;
 	compareQueue: GeneratedRandomPokemonsType[];
+	userPokemons: UserPokemonType[];
 }
 
 export enum Status {

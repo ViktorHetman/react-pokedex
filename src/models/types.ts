@@ -12,3 +12,8 @@ export enum PokemonStats {
 }
 
 export type PokemonStatType = PokemonStats;
+
+export interface PokemonStatsInterface {
+	name: string;
+	value: string;
+}

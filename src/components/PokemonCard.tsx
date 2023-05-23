@@ -8,6 +8,7 @@ import { pokemonTypeInterface } from "../redux/pokemon/types";
 import { useAppDispatch } from "../redux/hooks";
 import { addToCompare } from "../redux/pokemon/slice";
 import { setToasts } from "../redux/app/slice";
+import { appPokemonToList } from "../redux/pokemon/asyncActions";
 
 const PokemonCard: React.FC<{ pokemons: UserPokemonType[] }> = ({
 	pokemons,
@@ -26,7 +27,10 @@ const PokemonCard: React.FC<{ pokemons: UserPokemonType[] }> = ({
 								<div className="pokemon-card-list">
 									{location.pathname.includes("/pokemon") ||
 									location.pathname.includes("/search") ? (
-										<FaPlus className="plus" />
+										<FaPlus
+											className="plus"
+											onClick={() => dispatch(appPokemonToList(pokemon))}
+										/>
 									) : (
 										<FaTrash className="trash" />
 									)}
@@ -36,9 +40,7 @@ const PokemonCard: React.FC<{ pokemons: UserPokemonType[] }> = ({
 										onClick={() => {
 											dispatch(addToCompare(pokemon));
 											dispatch(
-												setToasts(
-													`${pokemon.name} has been added to compare queue`,
-												),
+												setToasts(`${pokemon.name} has been added to compare queue`),
 											);
 										}}
 									/>
@@ -52,22 +54,20 @@ const PokemonCard: React.FC<{ pokemons: UserPokemonType[] }> = ({
 									onClick={() => navigate(`/pokemon/${pokemon.id}`)}
 								/>
 								<div className="pokemon-card-types">
-									{pokemon.types.map(
-										(type: pokemonTypeInterface, idx: number) => {
-											const keys = Object.keys(type);
-											return (
-												<div className="pokemon-card-certain-type" key={idx}>
-													<img
-														src={type[keys[0]].image}
-														alt="pokemon-type"
-														className="pokemon-card-type-image"
-														loading="lazy"
-													/>
-													<h6 className="pokemon-card-type-text">{keys[0]}</h6>
-												</div>
-											);
-										},
-									)}
+									{pokemon.types.map((type: pokemonTypeInterface, idx: number) => {
+										const keys = Object.keys(type);
+										return (
+											<div className="pokemon-card-certain-type" key={idx}>
+												<img
+													src={type[keys[0]].image}
+													alt="pokemon-type"
+													className="pokemon-card-type-image"
+													loading="lazy"
+												/>
+												<h6 className="pokemon-card-type-text">{keys[0]}</h6>
+											</div>
+										);
+									})}
 								</div>
 							</div>
 						);
