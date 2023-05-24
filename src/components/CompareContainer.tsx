@@ -10,6 +10,7 @@ import { pokemonTypeInterface } from "../redux/pokemon/types";
 import { pokemonTypes } from "../utils/pokemonTypes";
 import { useAppDispatch } from "../redux/hooks";
 import { removeFromCompare } from "../redux/pokemon/slice";
+import { addPokemonToList } from "../redux/pokemon/asyncActions";
 
 const CompareContainer = ({
 	pokemon = undefined,
@@ -151,7 +152,12 @@ const CompareContainer = ({
 						</div>
 					</div>
 					<div className="compare-action-buttons">
-						<button className="compare-btn">Add</button>
+						<button
+							className="compare-btn"
+							onClick={() => dispatch(addPokemonToList(pokemon))}
+						>
+							Add
+						</button>
 						<button
 							className="view-btn"
 							onClick={() => navigate(`/pokemon/${pokemon.id}`)}

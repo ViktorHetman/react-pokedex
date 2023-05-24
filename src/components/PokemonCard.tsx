@@ -8,7 +8,7 @@ import { pokemonTypeInterface } from "../redux/pokemon/types";
 import { useAppDispatch } from "../redux/hooks";
 import { addToCompare } from "../redux/pokemon/slice";
 import { setToasts } from "../redux/app/slice";
-import { appPokemonToList, removePokemon } from "../redux/pokemon/asyncActions";
+import { addPokemonToList, removePokemon } from "../redux/pokemon/asyncActions";
 
 const PokemonCard: React.FC<{ pokemons: UserPokemonType[] }> = ({
 	pokemons,
@@ -29,12 +29,15 @@ const PokemonCard: React.FC<{ pokemons: UserPokemonType[] }> = ({
 									location.pathname.includes("/search") ? (
 										<FaPlus
 											className="plus"
-											onClick={() => dispatch(appPokemonToList(pokemon))}
+											onClick={() => dispatch(addPokemonToList(pokemon))}
 										/>
 									) : (
 										<FaTrash
 											className="trash"
-											onClick={() => dispatch(removePokemon({ id: pokemon.firebaseId! }))}
+											onClick={() => {
+												dispatch(removePokemon({ id: pokemon.firebaseId! }));
+												dispatch(setToasts("Pokemon was removed successfully."));
+											}}
 										/>
 									)}
 								</div>

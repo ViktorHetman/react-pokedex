@@ -77,7 +77,7 @@ export const getRandomPokemonData = createAsyncThunk(
 	},
 );
 
-export const appPokemonToList = createAsyncThunk(
+export const addPokemonToList = createAsyncThunk(
 	"pokemon/addPokemon",
 	async (
 		pokemon: {
