@@ -8,7 +8,7 @@ import { pokemonTypeInterface } from "../redux/pokemon/types";
 import { useAppDispatch } from "../redux/hooks";
 import { addToCompare } from "../redux/pokemon/slice";
 import { setToasts } from "../redux/app/slice";
-import { appPokemonToList } from "../redux/pokemon/asyncActions";
+import { appPokemonToList, removePokemon } from "../redux/pokemon/asyncActions";
 
 const PokemonCard: React.FC<{ pokemons: UserPokemonType[] }> = ({
 	pokemons,
@@ -32,7 +32,10 @@ const PokemonCard: React.FC<{ pokemons: UserPokemonType[] }> = ({
 											onClick={() => dispatch(appPokemonToList(pokemon))}
 										/>
 									) : (
-										<FaTrash className="trash" />
+										<FaTrash
+											className="trash"
+											onClick={() => dispatch(removePokemon({ id: pokemon.firebaseId! }))}
+										/>
 									)}
 								</div>
 								<div className="pokemon-card-compare">

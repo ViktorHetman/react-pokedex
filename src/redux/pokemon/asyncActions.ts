@@ -1,5 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { addDoc, getDocs, query, where } from "firebase/firestore";
+import {
+	addDoc,
+	deleteDoc,
+	doc,
+	getDocs,
+	query,
+	where,
+} from "firebase/firestore";
 import axios from "axios";
 
 import { allPokemonsRoute } from "../../utils/constants";
@@ -139,9 +146,7 @@ export const getUserPokemons = createAsyncThunk(
 			if (fetchedPokemons.docs.length) {
 				const userPokemons: UserPokemonType[] = [];
 				fetchedPokemons.forEach(async (pokemon) => {
-					console.log(pokemon, "111");
 					const pokemons = await pokemon.data().pokemon;
-					console.log(pokemons, "333");
 					// @ts-ignore
 					let image = images[pokemons.id];
 					if (!image) {
@@ -154,7 +159,7 @@ export const getUserPokemons = createAsyncThunk(
 					}));
 					userPokemons.push({
 						...pokemons,
-						firebaseId: pokemons.id,
+						firebaseId: pokemon.id,
 						image,
 						types,
 					});
@@ -162,6 +167,18 @@ export const getUserPokemons = createAsyncThunk(
 				return userPokemons;
 			}
 			return [];
+		} catch (error) {
+			console.log(error);
+		}
+	},
+);
+
+export const removePokemon = createAsyncThunk(
+	"pokemon/removePokemon",
+	async ({ id }: { id: string }) => {
+		try {
+			await deleteDoc(doc(pokemonListRef, id));
+			return { id };
 		} catch (error) {
 			console.log(error);
 		}
