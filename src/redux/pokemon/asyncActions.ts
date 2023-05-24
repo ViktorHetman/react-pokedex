@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { addDoc, getDocs, query, where } from "firebase/firestore";
 import axios from "axios";
 
 import { allPokemonsRoute } from "../../utils/constants";
@@ -12,7 +13,6 @@ import { pokemonTypes } from "../../utils/pokemonTypes";
 import { PokemonStatsInterface, UserPokemonType } from "../../models/types";
 import { RootState } from "../store";
 import { setToasts } from "../app/slice";
-import { addDoc } from "firebase/firestore";
 import { pokemonListRef } from "../../utils/FirebaseConfig";
 
 export const getInitialPokemonData = createAsyncThunk<PokemonType[]>(
@@ -76,7 +76,7 @@ export const appPokemonToList = createAsyncThunk(
 		pokemon: {
 			id: number;
 			name: string;
-			types: pokemonTypeInterface[] | string;
+			types: pokemonTypeInterface[];
 			stats?: PokemonStatsInterface[];
 		},
 		{ getState, dispatch },
@@ -96,16 +96,72 @@ export const appPokemonToList = createAsyncThunk(
 			});
 			if (index === -1) {
 				let types: string[] = [];
-				types = pokemon.types as unknown as string[];
+				if (!pokemon.stats) {
+					pokemon.types.forEach((type: any) => {
+						types.push(Object.keys(type).toString());
+					});
+				} else {
+					types = pokemon.types as unknown as string[];
+				}
+
 				await addDoc(pokemonListRef, {
 					pokemon: { id: pokemon.id, name: pokemon.name, types },
+					email: userInfo.email,
 				});
+				await dispatch(getUserPokemons());
 				return dispatch(setToasts(`${pokemon.name} was added to your collection`));
 			} else {
 				return dispatch(
 					setToasts(`${pokemon.name} already exsist in ur collection`),
 				);
 			}
+		} catch (error) {
+			console.log(error);
+		}
+	},
+);
+
+export const getUserPokemons = createAsyncThunk(
+	"pokemons/userList",
+	async (args, { getState }) => {
+		try {
+			const {
+				app: { userInfo },
+			} = getState() as RootState;
+			if (!userInfo) {
+				return;
+			}
+			const firestoreQuery = query(
+				pokemonListRef,
+				where("email", "==", userInfo.email),
+			);
+			const fetchedPokemons = await getDocs(firestoreQuery);
+			if (fetchedPokemons.docs.length) {
+				const userPokemons: UserPokemonType[] = [];
+				fetchedPokemons.forEach(async (pokemon) => {
+					console.log(pokemon, "111");
+					const pokemons = await pokemon.data().pokemon;
+					console.log(pokemons, "333");
+					// @ts-ignore
+					let image = images[pokemons.id];
+					if (!image) {
+						// @ts-ignore
+						image = defaultImages[pokemons.id];
+					}
+					const types = pokemons.types.map((name: string) => ({
+						// @ts-ignore
+						[name]: pokemonTypes[name],
+					}));
+					userPokemons.push({
+						...pokemons,
+						firebaseId: pokemons.id,
+						image,
+						types,
+					});
+				});
+				return userPokemons;
+			}
+			return [];
 		} catch (error) {
 			console.log(error);
 		}

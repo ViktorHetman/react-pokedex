@@ -5,7 +5,11 @@ import {
 	PokemonTypeInitialState,
 	Status,
 } from "./types";
-import { getInitialPokemonData, getRandomPokemonData } from "./asyncActions";
+import {
+	getInitialPokemonData,
+	getRandomPokemonData,
+	getUserPokemons,
+} from "./asyncActions";
 
 const initialState: PokemonTypeInitialState = {
 	allPokemons: undefined,
@@ -66,6 +70,9 @@ const pokemonSlice = createSlice({
 		builder.addCase(getRandomPokemonData.rejected, (state, action) => {
 			state.error = action.error.message;
 			state.status = Status.ERROR;
+		});
+		builder.addCase(getUserPokemons.fulfilled, (state, action) => {
+			state.userPokemons = action.payload!;
 		});
 	},
 });

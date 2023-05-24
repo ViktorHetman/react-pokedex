@@ -1,27 +1,35 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer, ToastOptions, toast } from "react-toastify";
+import { onAuthStateChanged } from "firebase/auth";
 
 import Background from "./components/Background";
-
 import Search from "./pages/Search";
 import About from "./pages/About";
 import Compare from "./pages/Compare";
 import List from "./pages/List";
-
 import Navbar from "./sections/Navbar";
 import Footer from "./sections/Footer";
 import Pokemon from "./pages/Pokemon";
 
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
-import { clearToasts } from "./redux/app/slice";
+import { clearToasts, setUserStatus } from "./redux/app/slice";
 
 import "./scss/index.scss";
 import "react-toastify/dist/ReactToastify.css";
+import { firebaseAuth } from "./utils/FirebaseConfig";
 
 const App: React.FC = () => {
 	const { toasts } = useAppSelector(({ app }) => app);
 	const dispatch = useAppDispatch();
+
+	React.useEffect(() => {
+		onAuthStateChanged(firebaseAuth, (currentUser) => {
+			if (currentUser) {
+				dispatch(setUserStatus({ email: currentUser.email }));
+			}
+		});
+	}, [dispatch]);
 
 	React.useEffect(() => {
 		if (toast.length) {
