@@ -6,9 +6,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { UserPokemonType } from "../models/types";
 import { pokemonTypeInterface } from "../redux/pokemon/types";
 import { useAppDispatch } from "../redux/hooks";
-import { addToCompare } from "../redux/pokemon/slice";
-import { setToasts } from "../redux/app/slice";
+import { addToCompare, setCurrentPokemon } from "../redux/pokemon/slice";
+import { setPokemonTab, setToasts } from "../redux/app/slice";
 import { addPokemonToList, removePokemon } from "../redux/pokemon/asyncActions";
+import { pokemonTabs } from "../utils/constants";
 
 const PokemonCard: React.FC<{ pokemons: UserPokemonType[] }> = ({
 	pokemons,
@@ -57,7 +58,11 @@ const PokemonCard: React.FC<{ pokemons: UserPokemonType[] }> = ({
 									alt="pokemon"
 									className="pokemon-card-image"
 									loading="lazy"
-									onClick={() => navigate(`/pokemon/${pokemon.id}`)}
+									onClick={() => {
+										dispatch(setPokemonTab(pokemonTabs.description));
+										dispatch(setCurrentPokemon(undefined));
+										navigate(`/pokemon/${pokemon.id}`);
+									}}
 								/>
 								<div className="pokemon-card-types">
 									{pokemon.types.map((type: pokemonTypeInterface, idx: number) => {

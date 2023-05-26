@@ -4,11 +4,24 @@ import axios from "axios";
 import { extractColors } from "extract-colors";
 
 import Wrapper from "../sections/Wrapper";
+import Description from "./PokemonPages/Description";
+import CapableMoves from "./PokemonPages/CapableMoves";
+import Evolution from "./PokemonPages/Evolution";
+import Location from "./PokemonPages/Location";
+
 import { defaultImages, images } from "../utils/getPokemonImages";
-import { pokemonRoute, pokemonSpeciesRoute } from "../utils/constants";
+import {
+	pokemonRoute,
+	pokemonSpeciesRoute,
+	pokemonTabs,
+} from "../utils/constants";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { setCurrentPokemon } from "../redux/pokemon/slice";
 
 const Pokemon: React.FC = () => {
 	const params = useParams();
+	const dispatch = useAppDispatch();
+	const { currentPokemonTab } = useAppSelector(({ app }) => app);
 
 	const getRecursiveEvolution: any = React.useCallback(
 		(evolutionChain: any, level: number, evolutionData: any) => {
@@ -75,26 +88,28 @@ const Pokemon: React.FC = () => {
 			const evolutionLevel = evolution.find(
 				({ pokemon }) => pokemon.name === data.name,
 			).level;
-			console.log({
-				id: data.id,
-				name: data.name,
-				types: data.types.map(
-					({ type: { name } }: { type: { name: string } }) => name,
-				),
-				image,
-				stats: data.stats.map(
-					({ stat, base_stat }: { stat: { name: string }; base_stat: number }) => ({
-						name: stat.name,
-						value: base_stat,
-					}),
-				),
-				encounters,
-				evolutionLevel,
-				evolution,
-				pokemonAbilities,
-			});
+			dispatch(
+				setCurrentPokemon({
+					id: data.id,
+					name: data.name,
+					types: data.types.map(
+						({ type: { name } }: { type: { name: string } }) => name,
+					),
+					image,
+					stats: data.stats.map(
+						({ stat, base_stat }: { stat: { name: string }; base_stat: number }) => ({
+							name: stat.name,
+							value: base_stat,
+						}),
+					),
+					encounters,
+					evolutionLevel,
+					evolution,
+					pokemonAbilities,
+				}),
+			);
 		},
-		[getEvolutionData, params.id],
+		[getEvolutionData, params.id, dispatch],
 	);
 
 	React.useEffect(() => {
@@ -127,7 +142,14 @@ const Pokemon: React.FC = () => {
 		getPokemonInfo(imageElemet.src);
 	}, [params, getPokemonInfo]);
 
-	return <div>Pokemon</div>;
+	return (
+		<>
+			<div>{currentPokemonTab === pokemonTabs.description && <Description />}</div>
+			<div>{currentPokemonTab === pokemonTabs.evolution && <Evolution />}</div>
+			<div>{currentPokemonTab === pokemonTabs.locations && <Location />}</div>
+			<div>{currentPokemonTab === pokemonTabs.moves && <CapableMoves />}</div>
+		</>
+	);
 };
 
 export default Wrapper(Pokemon);

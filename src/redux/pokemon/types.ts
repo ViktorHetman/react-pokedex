@@ -1,4 +1,4 @@
-import { UserPokemonType } from "../../models/types";
+import { PokemonStatType, UserPokemonType } from "../../models/types";
 
 export interface PokemonTypeInitialState {
 	allPokemons: undefined | PokemonType[];
@@ -7,6 +7,7 @@ export interface PokemonTypeInitialState {
 	error: null | undefined | string;
 	compareQueue: GeneratedRandomPokemonsType[];
 	userPokemons: UserPokemonType[];
+	currentPokemon: CurrentPokemonType | undefined;
 }
 
 export enum Status {
@@ -35,4 +36,15 @@ export interface pokemonTypeInterface {
 		weakness: string[];
 		vulnerable: string[];
 	};
+}
+
+export interface CurrentPokemonType {
+	id: number;
+	name: string;
+	types: pokemonTypeInterface;
+	image: string;
+	stats: PokemonStatType;
+	encounters: string[];
+	evolution: { level: number; pokemon: { name: string; url: string } }[];
+	pokemonAbilities: { abilities: string[]; moves: string[] };
 }
