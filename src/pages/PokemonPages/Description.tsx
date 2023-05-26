@@ -1,6 +1,7 @@
 import React from "react";
 import { useAppSelector } from "../../redux/hooks";
 import PokemonContainer from "../../components/PokemonContainer";
+import Info from "../../components/Info";
 
 const Description: React.FC = () => {
 	const pokemonData = useAppSelector(
@@ -8,7 +9,12 @@ const Description: React.FC = () => {
 	);
 	return (
 		<div>
-			<PokemonContainer image={pokemonData?.image!} />
+			{pokemonData && (
+				<>
+					<Info data={pokemonData} />
+					<PokemonContainer image={pokemonData?.image!} />
+				</>
+			)}
 		</div>
 	);
 };

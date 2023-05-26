@@ -41,10 +41,11 @@ export interface pokemonTypeInterface {
 export interface CurrentPokemonType {
 	id: number;
 	name: string;
-	types: pokemonTypeInterface;
+	types: pokemonTypeInterface[];
 	image: string;
 	stats: PokemonStatType;
 	encounters: string[];
 	evolution: { level: number; pokemon: { name: string; url: string } }[];
 	pokemonAbilities: { abilities: string[]; moves: string[] };
+	evolutionLevel: number;
 }
